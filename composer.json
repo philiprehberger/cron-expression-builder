@@ -13,7 +13,9 @@
     "homepage": "https://github.com/philiprehberger/cron-expression-builder",
     "authors": [
         {
-            "name": "Philip Rehberger"
+            "name": "Philip Rehberger",
+            "email": "me@philiprehberger.com",
+            "role": "Developer"
         }
     ],
     "require": {
@@ -39,6 +41,6 @@
         "lint": "vendor/bin/pint",
         "analyse": "vendor/bin/phpstan analyse"
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }
