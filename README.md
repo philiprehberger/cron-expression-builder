@@ -4,7 +4,7 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/philiprehberger/cron-expression-builder.svg)](https://packagist.org/packages/philiprehberger/cron-expression-builder)
 [![License](https://img.shields.io/github/license/philiprehberger/cron-expression-builder)](LICENSE)
 
-Fluent cron expression builder with human-readable methods. Framework-agnostic, zero dependencies.
+Fluent cron expression builder with human-readable methods.
 
 ## Requirements
 
