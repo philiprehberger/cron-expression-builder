@@ -8,7 +8,7 @@ Fluent cron expression builder with human-readable methods.
 
 ## Requirements
 
-- PHP ^8.2
+- PHP 8.2+
 
 ## Installation
 
