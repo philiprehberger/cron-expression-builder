@@ -7,6 +7,7 @@ namespace PhilipRehberger\CronBuilder\Tests;
 use InvalidArgumentException;
 use PhilipRehberger\CronBuilder\Cron;
 use PhilipRehberger\CronBuilder\CronDescriber;
+use PhilipRehberger\CronBuilder\CronExpression;
 use PhilipRehberger\CronBuilder\CronValidator;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -146,5 +147,160 @@ final class CronTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         Cron::hourlyAt(60);
+    }
+
+    #[Test]
+    public function test_every_quarter_hour(): void
+    {
+        $expression = Cron::custom()
+            ->everyQuarterHour()
+            ->build();
+
+        $this->assertSame('*/15 * * * *', $expression);
+    }
+
+    #[Test]
+    public function test_every_half_hour(): void
+    {
+        $expression = Cron::custom()
+            ->everyHalfHour()
+            ->build();
+
+        $this->assertSame('*/30 * * * *', $expression);
+    }
+
+    #[Test]
+    public function test_every_quarter_hour_with_other_fields(): void
+    {
+        $expression = Cron::custom()
+            ->everyQuarterHour()
+            ->hour('9-17')
+            ->dayOfWeek('1-5')
+            ->build();
+
+        $this->assertSame('*/15 9-17 * * 1-5', $expression);
+    }
+
+    #[Test]
+    public function test_every_half_hour_with_other_fields(): void
+    {
+        $expression = Cron::custom()
+            ->everyHalfHour()
+            ->hour('8-20')
+            ->build();
+
+        $this->assertSame('*/30 8-20 * * *', $expression);
+    }
+
+    #[Test]
+    public function test_weekly_on_day_all_days(): void
+    {
+        $days = [
+            'Sunday' => '0',
+            'Monday' => '1',
+            'Tuesday' => '2',
+            'Wednesday' => '3',
+            'Thursday' => '4',
+            'Friday' => '5',
+            'Saturday' => '6',
+        ];
+
+        foreach ($days as $name => $number) {
+            $expression = Cron::custom()
+                ->minute('0')
+                ->hour('0')
+                ->weeklyOnDay($name)
+                ->build();
+
+            $this->assertSame("0 0 * * {$number}", $expression, "Failed for day: {$name}");
+        }
+    }
+
+    #[Test]
+    public function test_weekly_on_day_case_insensitive(): void
+    {
+        $variants = ['monday', 'MONDAY', 'Monday', 'mOnDaY'];
+
+        foreach ($variants as $variant) {
+            $expression = Cron::custom()
+                ->minute('0')
+                ->hour('9')
+                ->weeklyOnDay($variant)
+                ->build();
+
+            $this->assertSame('0 9 * * 1', $expression, "Failed for variant: {$variant}");
+        }
+    }
+
+    #[Test]
+    public function test_weekly_on_day_invalid_throws(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        Cron::custom()->weeklyOnDay('Notaday');
+    }
+
+    #[Test]
+    public function test_next_run_date_daily(): void
+    {
+        $expression = new CronExpression('0 0 * * *');
+        $from = new \DateTimeImmutable('2026-03-22 10:00:00');
+        $next = $expression->nextRunDate($from);
+
+        $this->assertSame('2026-03-23 00:00', $next->format('Y-m-d H:i'));
+    }
+
+    #[Test]
+    public function test_next_run_date_weekly(): void
+    {
+        $expression = new CronExpression('0 9 * * 1');
+        // 2026-03-22 is a Sunday
+        $from = new \DateTimeImmutable('2026-03-22 10:00:00');
+        $next = $expression->nextRunDate($from);
+
+        $this->assertSame('2026-03-23 09:00', $next->format('Y-m-d H:i'));
+        $this->assertSame('Monday', $next->format('l'));
+    }
+
+    #[Test]
+    public function test_next_run_date_monthly(): void
+    {
+        $expression = new CronExpression('0 0 1 * *');
+        $from = new \DateTimeImmutable('2026-03-15 12:00:00');
+        $next = $expression->nextRunDate($from);
+
+        $this->assertSame('2026-04-01 00:00', $next->format('Y-m-d H:i'));
+    }
+
+    #[Test]
+    public function test_next_run_date_with_specific_from(): void
+    {
+        $expression = new CronExpression('30 14 * * *');
+        $from = new \DateTimeImmutable('2026-06-15 14:00:00');
+        $next = $expression->nextRunDate($from);
+
+        $this->assertSame('2026-06-15 14:30', $next->format('Y-m-d H:i'));
+    }
+
+    #[Test]
+    public function test_next_run_date_every_five_minutes(): void
+    {
+        $expression = new CronExpression('*/5 * * * *');
+        $from = new \DateTimeImmutable('2026-03-22 10:03:00');
+        $next = $expression->nextRunDate($from);
+
+        $this->assertSame('2026-03-22 10:05', $next->format('Y-m-d H:i'));
+    }
+
+    #[Test]
+    public function test_next_run_date_defaults_to_now(): void
+    {
+        $expression = new CronExpression('* * * * *');
+        $next = $expression->nextRunDate();
+
+        $now = new \DateTimeImmutable('now');
+        $diff = $next->getTimestamp() - $now->getTimestamp();
+
+        $this->assertGreaterThanOrEqual(0, $diff);
+        $this->assertLessThanOrEqual(120, $diff);
     }
 }

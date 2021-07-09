@@ -1,8 +1,15 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to `cron-expression-builder` will be documented in this file.
 
 ## [Unreleased]
+
+## [1.1.0] - 2026-03-22
+
+### Added
+- `everyQuarterHour()` and `everyHalfHour()` preset methods
+- `weeklyOnDay()` method accepting English day names
+- `nextRunDate()` method to calculate next execution time from a cron expression
 
 ## [1.0.2] - 2026-03-17
 

@@ -53,6 +53,43 @@ final class CronBuilder implements Stringable
         return $this;
     }
 
+    public function everyQuarterHour(): self
+    {
+        $this->minute = '*/15';
+
+        return $this;
+    }
+
+    public function everyHalfHour(): self
+    {
+        $this->minute = '*/30';
+
+        return $this;
+    }
+
+    public function weeklyOnDay(string $dayName): self
+    {
+        $map = [
+            'sunday' => '0',
+            'monday' => '1',
+            'tuesday' => '2',
+            'wednesday' => '3',
+            'thursday' => '4',
+            'friday' => '5',
+            'saturday' => '6',
+        ];
+
+        $key = strtolower($dayName);
+
+        if (! isset($map[$key])) {
+            throw new \InvalidArgumentException("Invalid day name '{$dayName}'.");
+        }
+
+        $this->dayOfWeek = $map[$key];
+
+        return $this;
+    }
+
     public function build(): string
     {
         return implode(' ', [
