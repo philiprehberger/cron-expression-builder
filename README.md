@@ -91,6 +91,55 @@ $from = new \DateTimeImmutable('2026-03-22 10:00:00');
 $next = $expr->nextRunDate($from); // 2026-03-23 09:00
 ```
 
+### Next N Run Dates
+
+Calculate multiple upcoming execution times:
+
+```php
+use PhilipRehberger\CronBuilder\CronExpression;
+use PhilipRehberger\CronBuilder\CronScheduler;
+
+// Via static method
+$runs = CronScheduler::nextRuns('0 9 * * *', 5);
+
+// Via CronExpression convenience method
+$expr = new CronExpression('*/5 * * * *');
+$runs = $expr->nextRuns(3, new \DateTimeImmutable('2026-03-22 10:00:00'));
+// [2026-03-22 10:05, 2026-03-22 10:10, 2026-03-22 10:15]
+```
+
+### Overlap Detection
+
+Check if cron schedules produce overlapping execution times:
+
+```php
+use PhilipRehberger\CronBuilder\CronScheduler;
+
+// Check two expressions within a 24-hour window
+CronScheduler::overlaps('0 9 * * *', '0 9 * * *'); // true
+CronScheduler::overlaps('0 9 * * *', '0 14 * * *'); // false
+
+// Find all overlaps among multiple expressions
+$overlaps = CronScheduler::findOverlaps([
+    'backup' => '0 2 * * *',
+    'cleanup' => '0 2 * * *',
+    'report' => '0 9 * * *',
+], 24);
+// [['expressions' => ['backup', 'cleanup'], 'time' => DateTimeImmutable]]
+```
+
+### Interval Analysis
+
+Analyze the timing intervals between cron runs:
+
+```php
+use PhilipRehberger\CronBuilder\CronInterval;
+
+CronInterval::averageInterval('*/5 * * * *'); // 300.0 (seconds)
+CronInterval::minInterval('0 0 * * *');       // 86400.0 (seconds)
+CronInterval::maxInterval('0 0 * * *');       // 86400.0 (seconds)
+```
+
 ### Validator
 
 Validate cron expression syntax:
@@ -143,6 +192,13 @@ CronDescriber::describe('0 0 1 1 *');      // "Every year on January 1st at midn
 | `CronBuilder::everyHalfHour()` | `self` | Set minute to `*/30` |
 | `CronBuilder::weeklyOnDay(string $dayName)` | `self` | Set day of week by English name |
 | `CronExpression::nextRunDate(?DateTimeInterface $from)` | `DateTimeImmutable` | Next execution time |
+| `CronExpression::nextRuns(int $count, ?DateTimeInterface $from)` | `array` | Next N execution times |
+| `CronScheduler::nextRuns(string\|CronExpression $expr, int $count, ?DateTimeInterface $from)` | `array` | Next N run dates |
+| `CronScheduler::overlaps(string\|CronExpression $a, string\|CronExpression $b, int $windowHours, ?DateTimeInterface $from)` | `bool` | Check if two schedules overlap |
+| `CronScheduler::findOverlaps(array $expressions, int $windowHours, ?DateTimeInterface $from)` | `array` | Find all overlapping pairs |
+| `CronInterval::averageInterval(string\|CronExpression $expr, int $sampleSize, ?DateTimeInterface $from)` | `float` | Average seconds between runs |
+| `CronInterval::minInterval(string\|CronExpression $expr, int $sampleSize, ?DateTimeInterface $from)` | `float` | Minimum seconds between runs |
+| `CronInterval::maxInterval(string\|CronExpression $expr, int $sampleSize, ?DateTimeInterface $from)` | `float` | Maximum seconds between runs |
 | `CronValidator::isValid(string $expr)` | `bool` | Validate cron syntax |
 | `CronDescriber::describe(string $expr)` | `string` | Human-readable description |
 
