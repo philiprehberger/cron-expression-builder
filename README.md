@@ -114,13 +114,12 @@ CronDescriber::describe('0 0 1 1 *');      // "Every year on January 1st at midn
 | `CronValidator::isValid(string $expr)` | `bool` | Validate cron syntax |
 | `CronDescriber::describe(string $expr)` | `string` | Human-readable description |
 
-## Testing
+## Development
 
 ```bash
 composer install
 vendor/bin/phpunit
 vendor/bin/pint --test
-vendor/bin/phpstan analyse
 ```
 
 ## License
