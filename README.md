@@ -2,7 +2,7 @@
 
 [![Tests](https://github.com/philiprehberger/cron-expression-builder/actions/workflows/tests.yml/badge.svg)](https://github.com/philiprehberger/cron-expression-builder/actions/workflows/tests.yml)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/philiprehberger/cron-expression-builder.svg)](https://packagist.org/packages/philiprehberger/cron-expression-builder)
-[![License](https://img.shields.io/packagist/l/philiprehberger/cron-expression-builder.svg)](https://packagist.org/packages/philiprehberger/cron-expression-builder)
+[![License](https://img.shields.io/github/license/philiprehberger/cron-expression-builder)](LICENSE)
 
 Fluent cron expression builder with human-readable methods. Framework-agnostic, zero dependencies.
 
@@ -120,8 +120,9 @@ CronDescriber::describe('0 0 1 1 *');      // "Every year on January 1st at midn
 composer install
 vendor/bin/phpunit
 vendor/bin/pint --test
+vendor/bin/phpstan analyse
 ```
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+MIT
