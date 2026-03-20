@@ -1,4 +1,4 @@
-# Cron Expression Builder
+# PHP Cron Expression Builder
 
 [![Tests](https://github.com/philiprehberger/cron-expression-builder/actions/workflows/tests.yml/badge.svg)](https://github.com/philiprehberger/cron-expression-builder/actions/workflows/tests.yml)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/philiprehberger/cron-expression-builder.svg)](https://packagist.org/packages/philiprehberger/cron-expression-builder)
