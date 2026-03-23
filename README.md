@@ -41,6 +41,19 @@ Cron::monthlyOn(15, '08:00'); // 0 8 15 * *
 Cron::yearly();               // 0 0 1 1 *
 ```
 
+### Preset Intervals
+
+Use builder presets for common intervals:
+
+```php
+use PhilipRehberger\CronBuilder\Cron;
+
+Cron::custom()->everyQuarterHour()->build();                   // */15 * * * *
+Cron::custom()->everyHalfHour()->build();                      // */30 * * * *
+Cron::custom()->everyQuarterHour()->hour('9-17')->build();     // */15 9-17 * * *
+Cron::custom()->weeklyOnDay('Monday')->minute('0')->hour('9')->build(); // 0 9 * * 1
+```
+
 ### Custom Builder
 
 Build complex expressions with the fluent builder:
@@ -61,6 +74,21 @@ The builder implements `Stringable`, so you can use it directly in string contex
 
 ```php
 echo Cron::custom()->minute('0')->hour('*/2'); // 0 */2 * * *
+```
+
+### Next Run Date
+
+Calculate the next execution time from a cron expression:
+
+```php
+use PhilipRehberger\CronBuilder\CronExpression;
+
+$expr = new CronExpression('0 9 * * 1');
+$next = $expr->nextRunDate(); // Next Monday at 09:00
+
+// With a specific starting datetime
+$from = new \DateTimeImmutable('2026-03-22 10:00:00');
+$next = $expr->nextRunDate($from); // 2026-03-23 09:00
 ```
 
 ### Validator
@@ -111,6 +139,10 @@ CronDescriber::describe('0 0 1 1 *');      // "Every year on January 1st at midn
 | `Cron::monthlyOn(int $day, string $time)` | `string` | Monthly on given day at time |
 | `Cron::yearly()` | `string` | January 1st at midnight |
 | `Cron::custom()` | `CronBuilder` | Start fluent builder |
+| `CronBuilder::everyQuarterHour()` | `self` | Set minute to `*/15` |
+| `CronBuilder::everyHalfHour()` | `self` | Set minute to `*/30` |
+| `CronBuilder::weeklyOnDay(string $dayName)` | `self` | Set day of week by English name |
+| `CronExpression::nextRunDate(?DateTimeInterface $from)` | `DateTimeImmutable` | Next execution time |
 | `CronValidator::isValid(string $expr)` | `bool` | Validate cron syntax |
 | `CronDescriber::describe(string $expr)` | `string` | Human-readable description |
 
