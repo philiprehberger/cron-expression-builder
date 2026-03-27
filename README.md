@@ -3,6 +3,7 @@
 [![Tests](https://github.com/philiprehberger/cron-expression-builder/actions/workflows/tests.yml/badge.svg)](https://github.com/philiprehberger/cron-expression-builder/actions/workflows/tests.yml)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/philiprehberger/cron-expression-builder.svg)](https://packagist.org/packages/philiprehberger/cron-expression-builder)
 [![License](https://img.shields.io/github/license/philiprehberger/cron-expression-builder)](LICENSE)
+[![Sponsor](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ec6cb9)](https://github.com/sponsors/philiprehberger)
 
 Fluent cron expression builder with human-readable methods.
 
