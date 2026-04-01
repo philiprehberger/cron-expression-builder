@@ -32,6 +32,32 @@ final class CronExpression
     }
 
     /**
+     * Get the cron expression as a string.
+     */
+    public function toString(): string
+    {
+        return implode(' ', [
+            $this->minute,
+            $this->hour,
+            $this->dayOfMonth,
+            $this->month,
+            $this->dayOfWeek,
+        ]);
+    }
+
+    /**
+     * Calculate the next N run dates from the given datetime.
+     *
+     * @param  int  $count  Number of run dates to return
+     * @param  \DateTimeInterface|null  $from  Starting datetime (default: now)
+     * @return array<int, \DateTimeImmutable>
+     */
+    public function nextRuns(int $count = 5, ?\DateTimeInterface $from = null): array
+    {
+        return CronScheduler::nextRuns($this, $count, $from);
+    }
+
+    /**
      * Calculate the next run date from the given datetime (default: now).
      */
     public function nextRunDate(?\DateTimeInterface $from = null): \DateTimeImmutable

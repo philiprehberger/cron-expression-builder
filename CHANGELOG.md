@@ -4,6 +4,13 @@ All notable changes to `cron-expression-builder` will be documented in this file
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-04-01
+
+### Added
+- Next N run date calculation via `CronScheduler::nextRuns()` and `CronExpression::nextRuns()`
+- Schedule overlap detection via `CronScheduler::overlaps()` and `findOverlaps()`
+- Interval analysis via `CronInterval::averageInterval()`, `minInterval()`, and `maxInterval()`
+
 ## [1.1.1] - 2026-03-31
 
 ### Changed
